@@ -6,6 +6,7 @@ import { isHarborAvailable } from '../../plugin'
 import { HarborRepository } from '../HarborRepository'
 import {
   HARBOR_ANNOTATION_REPOSITORY,
+  parseHarborSlug,
   useHarborAppData,
 } from '../useHarborAppData'
 import { InfoCard } from '@backstage/core-components'
@@ -16,24 +17,26 @@ const Widget = ({ entity }: { entity: Entity, width?: number, height?: number })
   return (
     <InfoCard title="Vulnerabilities in latest image" variant="gridItem">
       <Grid item xs={12}>
-        {repositorySlug.split(', ').map(slug => {
-          const info = slug.split('/');
-          const host: string = info.length > 2 ? (info.shift() as string) : '';
-          const project: string = info.shift() as string;
-          const repository: string = info.join('/');
-          const key = [host, project, repository].join('/');
+        {repositorySlug
+          .split(',')
+          .map(slug => slug.trim())
+          .filter(Boolean)
+          .map(slug => {
+            const { host, project, repository } = parseHarborSlug(slug)
+            const key = slug
 
-          return (
-            <Grid item xs={12} key={key}>
-              <HarborRepository
-                host={host}
-                project={project}
-                repository={repository}
-                widget
-              />
-            </Grid>
-          );
-        })}
+            return (
+              <Grid item xs={12} key={key}>
+                <HarborRepository
+                  slug={slug}
+                  host={host}
+                  project={project}
+                  repository={repository}
+                  widget
+                />
+              </Grid>
+            )
+          })}
       </Grid>
     </InfoCard>
   )

@@ -9,6 +9,7 @@ global.TextEncoder = require('util').TextEncoder;
 
 // Explicit mocks clearly set
 jest.mock('../useHarborAppData', () => ({
+  ...jest.requireActual('../useHarborAppData'),
   useHarborAppData: jest.fn(),
 }));
 
@@ -49,6 +50,27 @@ describe('HarborDashboardPage', () => {
     expect(repos).toHaveLength(2);
     expect(repos[0]).toHaveTextContent('some-host/my-project1/my-repo1');
     expect(repos[1]).toHaveTextContent('my-project2/my-repo2');
+  });
+
+  it('renders correctly with multi-path repository slugs (more than two paths)', () => {
+    (useHarborAppData as jest.Mock).mockReturnValue({
+      repositorySlug:
+        'project/subproject/my-repo, project/path1/path2/my-repo, harbor.mycorp.com/project/path1/path2/my-repo',
+    });
+
+    render(
+      <EntityProvider entity={mockEntity}>
+        <HarborDashboardPage />
+      </EntityProvider>,
+    );
+
+    const repos = screen.getAllByTestId('mock-harbor-repository');
+    expect(repos).toHaveLength(3);
+    expect(repos[0]).toHaveTextContent('project/subproject/my-repo');
+    expect(repos[1]).toHaveTextContent('project/path1/path2/my-repo');
+    expect(repos[2]).toHaveTextContent(
+      'harbor.mycorp.com/project/path1/path2/my-repo',
+    );
   });
 
   it('handles empty repositorySlug gracefully explicitly clearly', () => {

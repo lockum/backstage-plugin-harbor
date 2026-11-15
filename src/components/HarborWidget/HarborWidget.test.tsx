@@ -11,6 +11,7 @@ import { Entity } from '@backstage/catalog-model';
 global.TextEncoder = require('util').TextEncoder;
 
 jest.mock('../useHarborAppData', () => ({
+  ...jest.requireActual('../useHarborAppData'),
   useHarborAppData: jest.fn(),
   HARBOR_ANNOTATION_REPOSITORY: 'harbor.repository',
 }));

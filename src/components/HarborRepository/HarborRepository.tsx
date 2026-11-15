@@ -15,23 +15,32 @@ export function HarborRepository(props: RepositoryProps) {
   const backendUrl = config.getString('backend.baseUrl')
 
   const { loading } = useAsync(async () => {
-    let fetchUrl = `${backendUrl}/api/harbor/artifacts?project=${props.project}&repository=${props.repository}`
+    let fetchUrl = `${backendUrl}/api/harbor/artifacts?project=${encodeURIComponent(
+      props.project
+    )}&repository=${encodeURIComponent(props.repository)}`
     if (props.host) {
-      fetchUrl = fetchUrl.concat(`&host=${props.host}`)
+      fetchUrl = fetchUrl.concat(`&host=${encodeURIComponent(props.host)}`)
+    }
+    if (props.slug) {
+      fetchUrl = fetchUrl.concat(`&slug=${encodeURIComponent(props.slug)}`)
     }
     const response = await fetchApi.fetch(fetchUrl)
     const json = await response.json()
 
     if (json.hasOwnProperty('error')) {
       setError(true)
-      setErrorMsg(json.error.message)
+      setErrorMsg(
+        typeof json.error === 'string'
+          ? json.error
+          : json.error?.message ?? JSON.stringify(json.error)
+      )
     }
 
     json.pushTime = new Date(json.pushTime).toLocaleDateString()
     json.pullTime = new Date(json.pullTime).toLocaleDateString()
 
     setRepository(json)
-  }, [props.project, props.repository])
+  }, [props.project, props.repository, props.host, props.slug])
 
   if (loading) {
     return <Progress />
@@ -89,7 +98,12 @@ export function HarborRepository(props: RepositoryProps) {
             '#ff471a',
           ]}
           customSegmentStops={[0, 100, 200, 300, 400, 500]}
-          currentValueText={truncateGraphDescription(props.host, props.project, props.repository)}
+          currentValueText={truncateGraphDescription(
+            props.host,
+            props.project,
+            props.repository,
+            props.slug
+          )}
           customSegmentLabels={[
             {
               text: 'None',
@@ -124,10 +138,14 @@ export function HarborRepository(props: RepositoryProps) {
   )
 }
 
-function truncateGraphDescription (host: string, project: string, repository: string) {
-  let descriptionString = `${host}${host ? '/' : ''}${
-    project
-  }/${repository}`
+function truncateGraphDescription(
+  host: string,
+  project: string,
+  repository: string,
+  slug?: string
+) {
+  let descriptionString =
+    slug || `${host}${host ? '/' : ''}${project}/${repository}`
   if (descriptionString.length > 38) {
     descriptionString = `${project}/${repository}`
     if (descriptionString.length > 38) {
@@ -135,7 +153,7 @@ function truncateGraphDescription (host: string, project: string, repository: st
     }
     return descriptionString
   }
-  return descriptionString;
+  return descriptionString
 }
 
 HarborRepository.defaultProps = {
@@ -146,7 +164,8 @@ interface RepositoryProps {
   host: string
   project: string
   repository: string
-  title: string
+  title?: string
+  slug?: string
   width?: number
   height?: number
 }

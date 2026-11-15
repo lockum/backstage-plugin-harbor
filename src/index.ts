@@ -4,4 +4,8 @@ export {
   HarborWidget,
   isHarborAvailable,
 } from './plugin'
-export { HARBOR_ANNOTATION_REPOSITORY } from './components/useHarborAppData'
+export {
+  HARBOR_ANNOTATION_REPOSITORY,
+  parseHarborSlug,
+} from './components/useHarborAppData'
+export type { ParsedHarborSlug } from './components/useHarborAppData'
