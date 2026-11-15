@@ -1,6 +1,6 @@
 # Backstage Harbor Plugin
 
-[![npm version](https://img.shields.io/npm/v/@digitalist-open-cloud/backstage-plugin-harbor.svg)](https://www.npmjs.com/package/@digitalist-open-cloud/backstage-plugin-harbor)
+[![npm version](https://img.shields.io/npm/v/@lockum/backstage-plugin-harbor.svg)](https://www.npmjs.com/package/@lockum/backstage-plugin-harbor)
 
 The Harbor Frontend Plugin displays detailed information about Docker images and container artifacts stored in [CNCF Harbor](https://goharbor.io/) directly within your Backstage software catalog.
 
@@ -45,7 +45,7 @@ In `packages/app/src/components/catalog/EntityPage.tsx`:
 import {
   HarborPage,
   isHarborAvailable,
-} from '@digitalist-open-cloud/backstage-plugin-harbor';
+} from '@lockum/backstage-plugin-harbor';
 
 // Inside your serviceEntityPage / componentEntityPage:
 const serviceEntityPage = (
@@ -67,7 +67,7 @@ You can also display a summary vulnerability widget on the entity's Overview tab
 import {
   HarborWidget,
   isHarborAvailable,
-} from '@digitalist-open-cloud/backstage-plugin-harbor';
+} from '@lockum/backstage-plugin-harbor';
 
 const overviewContent = (
   <Grid container spacing={3} alignItems="stretch">
