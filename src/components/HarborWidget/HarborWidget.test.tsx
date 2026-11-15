@@ -8,7 +8,6 @@ import { EntityProvider } from '@backstage/plugin-catalog-react';
 import { catalogApiRef } from '@backstage/plugin-catalog-react';
 import { Entity } from '@backstage/catalog-model';
 
-global.TextEncoder = require('util').TextEncoder;
 
 jest.mock('../useHarborAppData', () => ({
   ...jest.requireActual('../useHarborAppData'),

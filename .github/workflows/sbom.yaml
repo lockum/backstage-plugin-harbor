@@ -1,5 +1,6 @@
 name: sbom
-on: [push]
+on:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,7 +18,7 @@ jobs:
           node-version: 22
       - run: yarn install --ignore-engines
       - name: Trivy scan
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.28.0
         id: trivy-scan
         with:
           scan-type: 'repo'
@@ -26,7 +27,7 @@ jobs:
           output: 'trivy-results.sarif'
           severity: 'CRITICAL'
       - name: Trivy SBOM creation
-        uses: aquasecurity/trivy-action@0.29.0
+        uses: aquasecurity/trivy-action@0.28.0
         id: trivy
         env:
           TRIVY_SKIP_DB_UPDATE: true
