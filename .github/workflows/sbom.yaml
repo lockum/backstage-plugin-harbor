@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: yarn install
+      - run: yarn install --ignore-engines
       - name: Trivy scan
         uses: aquasecurity/trivy-action@0.29.0
         id: trivy-scan
@@ -38,8 +38,11 @@ jobs:
           scan-ref: .
 
       - name: Upload to DependencyTrack
+        if: ${{ env.DT_SERVER != '' }}
         uses: DependencyTrack/gh-upload-sbom@v3
         id: upload
+        env:
+          DT_SERVER: ${{ secrets.DT_SERVER }}
         with:
           serverhostname: ${{ secrets.DT_SERVER }}
           apikey: ${{ secrets.DT_KEY }}

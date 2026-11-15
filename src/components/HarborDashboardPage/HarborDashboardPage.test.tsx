@@ -55,7 +55,7 @@ describe('HarborDashboardPage', () => {
   it('renders correctly with multi-path repository slugs (more than two paths)', () => {
     (useHarborAppData as jest.Mock).mockReturnValue({
       repositorySlug:
-        'project/subproject/my-repo, project/path1/path2/my-repo, harbor.mycorp.com/project/path1/path2/my-repo',
+        'project/subproject/my-repo, project/path1/path2/my-repo, harbor.example.com/project/path1/path2/my-repo',
     });
 
     render(
@@ -69,7 +69,7 @@ describe('HarborDashboardPage', () => {
     expect(repos[0]).toHaveTextContent('project/subproject/my-repo');
     expect(repos[1]).toHaveTextContent('project/path1/path2/my-repo');
     expect(repos[2]).toHaveTextContent(
-      'harbor.mycorp.com/project/path1/path2/my-repo',
+      'harbor.example.com/project/path1/path2/my-repo',
     );
   });
 
